@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>LFfile 사양서 (한국어판)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.6; margin: 2rem; max-width: 900px; }
+    h1, h2, h3 { line-height: 1.3; }
+    code { background: #f5f5f5; padding: 0.1em 0.3em; border-radius: 3px; }
+    pre { background: #f5f5f5; padding: 0.75rem; border-radius: 4px; overflow-x: auto; }
+    table { border-collapse: collapse; margin: 1rem 0; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 0.4rem 0.6rem; text-align: left; }
+  </style>
+</head>
+<body>
+
+<h1>LFfile 사양서</h1>
+<p>버전: 1.0 (한국어판)</p>
+
+<h2>1. 목적</h2>
+<p>
+  LFfile은 번역 작업을 더 간단하고, 더 안전하며, 더 빠르게 만들기 위해 설계된
+  가볍고 높은 안정성을 가진 번역 파일 형식입니다.
+</p>
+<p>
+  JSON, XML, YAML과 같은 기존 형식은 다음과 같은 문제가 있습니다:
+</p>
+<ul>
+  <li>한 글자 오류로 전체 파일이 손상될 수 있음</li>
+  <li>문법이 복잡하여 실수가 발생하기 쉬움</li>
+  <li>가독성이 낮음</li>
+</ul>
+<p>
+  LFfile은 이러한 문제를 해결하며, 번역가와 개발자 모두에게 사용하기 쉬운 형식을 목표로 합니다.
+</p>
+
+<h2>2. 특징</h2>
+
+<h3>2-1. 가벼움</h3>
+<ul>
+  <li>문법이 단순하고 가독성이 높음</li>
+  <li>JSON이나 XML보다 필요한 줄 수가 훨씬 적음</li>
+  <li>간결한 문법에도 불구하고 많은 정보를 담을 수 있어 동일한 번역량 기준으로 JSON보다 파일 크기가 작음</li>
+</ul>
+
+<h3>2-2. 안전성</h3>
+<ul>
+  <li>각 줄이 독립적으로 처리됨</li>
+  <li>한 줄의 오류가 다른 줄에 영향을 주지 않음</li>
+</ul>
+
+<h3>2-3. 유연성</h3>
+<ul>
+  <li>따옴표가 필요 없음</li>
+  <li><code>{}</code> 변수 태그를 그대로 작성 가능</li>
+  <li><code>&lt;br&gt;</code> 같은 HTML 태그도 그대로 작성 가능</li>
+</ul>
+
+<h3>2-4. 오류에 강함</h3>
+<ul>
+  <li>오류는 해당 줄에만 영향을 줌</li>
+  <li>JSON처럼 “전체 파일 손상”이 발생하지 않음</li>
+</ul>
+
+<h3>2-5. 작성이 쉬움</h3>
+<ul>
+  <li>필요한 문자 수가 적음</li>
+  <li>작업 속도가 빠름</li>
+  <li>실수가 적게 발생함</li>
+</ul>
+
+<h2>3. 파일 구조</h2>
+<p>LFfile은 <strong>헤더(Head)</strong>와 <strong>본문(Body)</strong>으로 구성됩니다.</p>
+
+<h3>3-1. 헤더 (Head)</h3>
+<p>번역 대상 언어를 지정합니다.</p>
+<pre><code>(lang=Ja)</code></pre>
+<p><strong>규칙:</strong></p>
+<ul>
+  <li>ISO 639-1을 따름</li>
+  <li>대문자 + 소문자 (예: <code>Ja</code>, <code>En</code>, <code>Fr</code>, <code>De</code>, <code>Ko</code>, <code>Zh</code>)</li>
+</ul>
+
+<h3>3-2. 본문 (Body)</h3>
+<p>형식:</p>
+<pre><code>&lt;ID&gt; = &lt;번역문&gt;</code></pre>
+<p>최소 예시:</p>
+<pre><code>A1 = Hello.</code></pre>
+
+<h3>3-3. 줄바꿈 규칙</h3>
+<p>LFfile은 줄 단위로 의미를 가집니다.</p>
+<ul>
+  <li>헤더: 1줄</li>
+  <li>번역 항목: 1줄</li>
+  <li>주석: 1줄</li>
+</ul>
+<p>예시:</p>
+<pre><code>(lang=Ja)
+A1 = こんにちは。
+A2 = Hello.
+/This is comments.</code></pre>
+
+<h2>4. LFfile 작성 방법</h2>
+<p>LFfile은 매우 간단하게 작성할 수 있습니다.</p>
+
+<h3>4-1. 헤더 작성</h3>
+<pre><code>(lang=En)</code></pre>
+<ul>
+  <li>ISO 639-1을 따름</li>
+  <li>대문자 → 소문자</li>
+</ul>
+
+<h3>4-2. 본문 작성</h3>
+
+<h4>(1) ID 가져오기</h4>
+<p>예:</p>
+<pre><code>&lt;p id="A1"&gt;</code></pre>
+<p>→ ID는 <code>A1</code></p>
+
+<h4>(2) 번역문 작성</h4>
+<ul>
+  <li><code>{}</code> 및 <code>&lt;br&gt;</code>을 그대로 작성 가능</li>
+  <li>따옴표 필요 없음</li>
+</ul>
+
+<h4>(3) 항목 작성</h4>
+<pre><code>&lt;ID&gt; = &lt;번역문&gt;</code></pre>
+<p>예:</p>
+<pre><code>A1 = hello.</code></pre>
+
+<h3>4-3. 저장 방법</h3>
+
+<h4>(1) .txt로 저장 후 .lf로 이름 변경</h4>
+<pre><code>translation.txt → translation.lf</code></pre>
+
+<h4>(2) 처음부터 .lf로 저장</h4>
+<pre><code>mytranslation.lf</code></pre>
+
+<h3>4-4. 문자 인코딩 (중요)</h3>
+<p>
+  LFfile은 <strong>UTF-8</strong>로 저장하는 것을 권장합니다.
+  UTF-8이 아닐 경우 글자가 깨질 수 있습니다.
+</p>
+
+<h2>5. 오류 처리</h2>
+<p>
+  LFfile은 각 줄이 독립적이므로, 헤더를 제외한 줄에서 오류가 발생해도
+  <strong>해당 줄만 무시되고 다른 줄에는 영향을 주지 않습니다.</strong>
+</p>
+
+<h3>5-1. 줄 독립성</h3>
+<ul>
+  <li>한 줄의 손상이 다른 줄에 영향을 주지 않음</li>
+  <li>번역 작업을 계속 진행할 수 있음</li>
+</ul>
+
+<h3>5-2. 오류 줄 처리 방식</h3>
+<ul>
+  <li>문제가 있는 줄만 건너뜀</li>
+  <li>나머지 줄은 정상적으로 로드됨</li>
+</ul>
+
+<h3>5-3. 오류 예시 (HTML을 잘못 작성한 경우)</h3>
+<pre><code>A1 = Hello.
+&lt;p id="A1"&gt;Welcome&lt;/p&gt;
+A2 = Bye.</code></pre>
+<p>→ 두 번째 줄만 무효. A1과 A2는 정상.</p>
+
+<h3>5-4. 오류 발견이 쉬움</h3>
+<ul>
+  <li>문제가 있는 줄을 쉽게 찾을 수 있음</li>
+  <li>파서는 경고를 표시할 수 있음</li>
+</ul>
+
+<h3>5-5. 다른 형식과 비교</h3>
+<table>
+  <thead>
+    <tr><th>형식</th><th>한 줄 오류의 영향</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>JSON</td><td>전체 파일 손상</td></tr>
+    <tr><td>XML</td><td>전체 파일 손상</td></tr>
+    <tr><td>YAML</td><td>들여쓰기 오류로 손상</td></tr>
+    <tr><td>PO</td><td>부분적으로 손상, 영향 범위 큼</td></tr>
+    <tr><td><strong>LFfile</strong></td><td><strong>해당 줄만 무시</strong></td></tr>
+  </tbody>
+</table>
+
+<h3>5-6. 복구가 쉬움</h3>
+<ul>
+  <li>손상된 줄만 수정하면 됨</li>
+  <li>전체 파일을 검사할 필요 없음</li>
+</ul>
+
+<h3>5-7. 인코딩 주의</h3>
+<p>
+  UTF-8이 아닐 경우 글자가 깨질 수 있습니다.
+  반드시 UTF-8을 사용하세요.
+</p>
+
+<h2>6. 피드백 및 연락처</h2>
+<p>
+  어떤 의견이든 환영합니다. 작은 내용이라도 괜찮습니다.
+  우리는 아직 개선할 부분이 남아 있다고 생각하며, 지속적으로 보완해 나갈 것입니다.
+</p>
+
+<h3>6-1. 연락처</h3>
+<pre><code>LFfile-dev@outlook.com</code></pre>
+
+<h3>6-2. 응답 정책</h3>
+<ul>
+  <li>즉시 답변이 어려울 수 있음</li>
+  <li>내용 확인 후 반드시 답변드립니다</li>
+</ul>
+
+<h3>6-3. 개인정보</h3>
+<p>
+  이메일 주소와 내용은 답변 및 개선 목적에만 사용됩니다.
+</p>
+
+<h2>7. 향후 개선</h2>
+<p>
+  LFfile은 계속 발전할 것입니다.
+  피드백을 바탕으로 사양을 개선하고 새로운 기능을 추가할 예정입니다.
+</p>
+
+<h2>8. 상표</h2>
+<p>
+  본 문서에 언급된 제품명, 서비스명, 회사명은 각 소유자의 상표 또는 등록 상표입니다.
+</p>
+<p>
+  <strong>Windows</strong> 및 <strong>Microsoft</strong>는 Microsoft Corporation의 상표입니다.  
+  기타 상표는 모두 해당 권리자에게 귀속됩니다.
+</p>
+<p>
+  본 문서는 이러한 기업과 아무런 관련이 없습니다.  
+  모든 명칭은 설명을 위해 사용되었으며, 권리 침해 의도는 없습니다.
+</p>
+
+</body>
+</html>
