@@ -6,7 +6,7 @@ simpler, safer, and faster than JSON/XML-based approaches.
 ## Available Languages
 - [日本語 / Japanese](lf-spec-ja.html)
 - [English](lf-spec-en.html)
-- [中文 / Chinese](lf-spec-zh.html)
+- [中文(简体) / Chinese(Zh)](lf-spec-zh.html)
 - [한국어 / Korean](lf-spec-ko.html)
 - [Deutsch / German](lf-spec-de.html)
 - [Français / French](lf-spec-fr.html)
