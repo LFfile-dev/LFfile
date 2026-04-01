@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Spécification LFfile (Français)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.6; margin: 2rem; max-width: 900px; }
+    h1, h2, h3 { line-height: 1.3; }
+    code { background: #f5f5f5; padding: 0.1em 0.3em; border-radius: 3px; }
+    pre { background: #f5f5f5; padding: 0.75rem; border-radius: 4px; overflow-x: auto; }
+    table { border-collapse: collapse; margin: 1rem 0; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 0.4rem 0.6rem; text-align: left; }
+  </style>
+</head>
+<body>
+
+<h1>Spécification LFfile</h1>
+<p>Version : 1.0 (Français)</p>
+
+<h2>1. Objectif</h2>
+<p>
+  LFfile est un format de fichier de traduction léger et très robuste,
+  conçu pour rendre le travail de traduction plus simple, plus sûr et plus rapide.
+</p>
+<p>
+  Les formats existants tels que JSON, XML et YAML présentent souvent les problèmes suivants :
+</p>
+<ul>
+  <li>Une seule erreur de caractère peut corrompre tout le fichier</li>
+  <li>Syntaxe lourde et sujette aux erreurs</li>
+  <li>Lisibilité réduite</li>
+</ul>
+<p>
+  LFfile résout ces problèmes et vise à être un format facile à utiliser
+  aussi bien pour les traducteurs que pour les développeurs.
+</p>
+
+<h2>2. Caractéristiques</h2>
+
+<h3>2-1. Léger</h3>
+<ul>
+  <li>Syntaxe minimale et grande lisibilité</li>
+  <li>Beaucoup moins de lignes que JSON ou XML</li>
+  <li>Malgré sa simplicité, peut contenir beaucoup d’informations, ce qui réduit la taille totale du fichier</li>
+</ul>
+
+<h3>2-2. Sûr</h3>
+<ul>
+  <li>Chaque ligne est indépendante</li>
+  <li>Une erreur dans une ligne n’affecte pas les autres</li>
+</ul>
+
+<h3>2-3. Flexible</h3>
+<ul>
+  <li>Pas besoin de guillemets</li>
+  <li>Les variables <code>{}</code> peuvent être écrites telles quelles</li>
+  <li>Les balises HTML comme <code>&lt;br&gt;</code> peuvent être écrites directement</li>
+</ul>
+
+<h3>2-4. Résistant aux erreurs</h3>
+<ul>
+  <li>Les erreurs n’affectent que la ligne concernée</li>
+  <li>Pas de « corruption totale du fichier » comme avec JSON</li>
+</ul>
+
+<h3>2-5. Facile à écrire</h3>
+<ul>
+  <li>Moins de caractères nécessaires</li>
+  <li>Flux de travail plus rapide</li>
+  <li>Moins de risques d’erreurs</li>
+</ul>
+
+<h2>3. Structure du fichier</h2>
+<p>LFfile se compose de deux parties : <strong>l’en-tête (Head)</strong> et <strong>le corps (Body)</strong>.</p>
+
+<h3>3-1. En‑tête (Head)</h3>
+<p>L’en‑tête indique la langue cible.</p>
+<pre><code>(lang=Ja)</code></pre>
+<p><strong>Règles :</strong></p>
+<ul>
+  <li>Doit suivre ISO 639‑1</li>
+  <li>Majuscule + minuscule (ex. : <code>Ja</code>, <code>En</code>, <code>Fr</code>, <code>De</code>, <code>Ko</code>, <code>Zh</code>)</li>
+</ul>
+
+<h3>3-2. Corps (Body)</h3>
+<p>Format :</p>
+<pre><code>&lt;ID&gt; = &lt;texte traduit&gt;</code></pre>
+<p>Exemple minimal :</p>
+<pre><code>A1 = Hello.</code></pre>
+
+<h3>3-3. Règles de lignes</h3>
+<p>LFfile est basé sur des lignes. Chaque ligne a une signification.</p>
+<ul>
+  <li>En‑tête : 1 ligne</li>
+  <li>Entrée : 1 ligne</li>
+  <li>Commentaire : 1 ligne</li>
+</ul>
+<p>Exemple :</p>
+<pre><code>(lang=Ja)
+A1 = こんにちは。
+A2 = Hello.
+/This is comments.</code></pre>
+
+<h2>4. Comment écrire un fichier LFfile</h2>
+<p>Créer un LFfile est extrêmement simple.</p>
+
+<h3>4-1. Écrire l’en‑tête</h3>
+<pre><code>(lang=En)</code></pre>
+<ul>
+  <li>Suivre ISO 639‑1</li>
+  <li>Majuscule → minuscule</li>
+</ul>
+
+<h3>4-2. Écrire le corps</h3>
+
+<h4>(1) Obtenir l’ID</h4>
+<p>Exemple :</p>
+<pre><code>&lt;p id="A1"&gt;</code></pre>
+<p>→ L’ID est <code>A1</code></p>
+
+<h4>(2) Écrire ou traduire le texte</h4>
+<ul>
+  <li><code>{}</code> et <code>&lt;br&gt;</code> peuvent être écrits directement</li>
+  <li>Pas besoin de guillemets</li>
+</ul>
+
+<h4>(3) Écrire l’entrée</h4>
+<pre><code>&lt;ID&gt; = &lt;texte traduit&gt;</code></pre>
+<p>Exemple :</p>
+<pre><code>A1 = hello.</code></pre>
+
+<h3>4-3. Enregistrer le fichier</h3>
+
+<h4>(1) Enregistrer en .txt puis renommer en .lf</h4>
+<pre><code>translation.txt → translation.lf</code></pre>
+
+<h4>(2) Enregistrer directement en .lf</h4>
+<pre><code>mytranslation.lf</code></pre>
+
+<h3>4-4. Encodage (important)</h3>
+<p>
+  LFfile doit être enregistré en <strong>UTF‑8</strong>.
+  Un autre encodage peut provoquer des caractères illisibles.
+</p>
+
+<h2>5. Gestion des erreurs</h2>
+<p>
+  Chaque ligne étant indépendante, une erreur dans une ligne (sauf l’en‑tête)
+  <strong>n’affecte que cette ligne</strong>, et le reste du fichier est chargé normalement.
+</p>
+
+<h3>5-1. Indépendance des lignes</h3>
+<ul>
+  <li>Une ligne corrompue n’affecte pas les autres</li>
+  <li>La traduction peut continuer</li>
+</ul>
+
+<h3>5-2. Traitement des lignes erronées</h3>
+<ul>
+  <li>Seule la ligne problématique est ignorée</li>
+  <li>Les autres lignes sont chargées correctement</li>
+</ul>
+
+<h3>5-3. Exemple d’erreur (HTML écrit par erreur)</h3>
+<pre><code>A1 = Hello.
+&lt;p id="A1"&gt;Welcome&lt;/p&gt;
+A2 = Bye.</code></pre>
+<p>→ Seule la deuxième ligne est invalide. A1 et A2 sont chargées normalement.</p>
+
+<h3>5-4. Erreurs faciles à repérer</h3>
+<ul>
+  <li>La ligne problématique est immédiatement identifiable</li>
+  <li>Les parseurs peuvent afficher des avertissements</li>
+</ul>
+
+<h3>5-5. Comparaison avec d’autres formats</h3>
+<table>
+  <thead>
+    <tr><th>Format</th><th>Effet d’une erreur</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>JSON</td><td>Fichier entièrement corrompu</td></tr>
+    <tr><td>XML</td><td>Fichier entièrement corrompu</td></tr>
+    <tr><td>YAML</td><td>Erreur d’indentation → fichier corrompu</td></tr>
+    <tr><td>PO</td><td>Corruption partielle, impact large</td></tr>
+    <tr><td><strong>LFfile</strong></td><td><strong>Seule la ligne est ignorée</strong></td></tr>
+  </tbody>
+</table>
+
+<h3>5-6. Restauration facile</h3>
+<ul>
+  <li>Il suffit de corriger la ligne erronée</li>
+  <li>Pas besoin de vérifier tout le fichier</li>
+</ul>
+
+<h3>5-7. Avertissement sur l’encodage</h3>
+<p>
+  Un fichier non enregistré en UTF‑8 peut contenir des caractères illisibles.
+  Utilisez toujours UTF‑8.
+</p>
+
+<h2>6. Commentaires & Contact</h2>
+<p>
+  Nous accueillons volontiers toutes suggestions, remarques ou rapports de problèmes — même minimes.
+  Nous pensons qu’il reste encore des points à améliorer et nous les traiterons progressivement.
+</p>
+
+<h3>6-1. Contact</h3>
+<pre><code>LFfile-dev@outlook.com</code></pre>
+
+<h3>6-2. Politique de réponse</h3>
+<ul>
+  <li>Une réponse immédiate peut ne pas être possible</li>
+  <li>Nous répondrons toujours après examen de votre message</li>
+</ul>
+
+<h3>6-3. Confidentialité</h3>
+<p>
+  Votre adresse e‑mail et votre message ne seront utilisés que pour répondre et améliorer le projet.
+</p>
+
+<h2>7. Améliorations futures</h2>
+<p>
+  LFfile continuera d’évoluer.
+  Nous améliorerons la spécification et ajouterons de nouvelles fonctionnalités selon les retours reçus.
+</p>
+
+<h2>8. Marques</h2>
+<p>
+  Tous les noms de produits, services et entreprises mentionnés dans ce document
+  sont des marques ou des marques déposées de leurs propriétaires respectifs.
+</p>
+<p>
+  <strong>Windows</strong> et <strong>Microsoft</strong> sont des marques de Microsoft Corporation.  
+  Toutes les autres marques appartiennent à leurs détenteurs respectifs.
+</p>
+<p>
+  Ce document n’est affilié à aucune de ces entreprises.  
+  Tous les noms sont utilisés à des fins explicatives uniquement, sans intention de porter atteinte aux droits.
+</p>
+
+</body>
+</html>
