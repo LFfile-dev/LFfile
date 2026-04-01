@@ -4,7 +4,7 @@ LFfile is a lightweight and robust translation file format designed to make loca
 simpler, safer, and faster than JSON/XML-based approaches.
 
 ## Available Languages
-- [日本語 / Japanese](lf-spec-ja.html)
+- [日本語 / Japanese](lf-spec-jp.html)
 - [English](lf-spec-en.html)
 - [中文(简体) / Chinese(Zh)](lf-spec-zh.html)
 - [한국어 / Korean](lf-spec-ko.html)
