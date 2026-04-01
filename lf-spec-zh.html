@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>LFfile 规范说明（简体中文）</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.6; margin: 2rem; max-width: 900px; }
+    h1, h2, h3 { line-height: 1.3; }
+    code { background: #f5f5f5; padding: 0.1em 0.3em; border-radius: 3px; }
+    pre { background: #f5f5f5; padding: 0.75rem; border-radius: 4px; overflow-x: auto; }
+    table { border-collapse: collapse; margin: 1rem 0; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 0.4rem 0.6rem; text-align: left; }
+  </style>
+</head>
+<body>
+
+<h1>LFfile 规范说明</h1>
+<p>版本：1.0（简体中文）</p>
+
+<h2>1. 目的</h2>
+<p>
+  LFfile 是一种轻量且高可靠性的翻译文件格式，旨在让翻译工作变得更简单、更安全、更高效。
+</p>
+<p>
+  现有格式（如 JSON、XML、YAML）常常存在以下问题：
+</p>
+<ul>
+  <li>单个字符错误即可导致整个文件损坏</li>
+  <li>语法复杂、书写繁琐</li>
+  <li>可读性较低</li>
+</ul>
+<p>
+  LFfile 解决了这些问题，并致力于成为翻译人员与开发者都易于使用的格式。
+</p>
+
+<h2>2. 特点</h2>
+
+<h3>2-1. 轻量</h3>
+<ul>
+  <li>语法简洁、可读性高</li>
+  <li>相比 JSON 或 XML 所需行数更少</li>
+  <li>在保持简洁的同时可记录大量信息，因此在相同翻译量下文件体积比 JSON 更小</li>
+</ul>
+
+<h3>2-2. 安全</h3>
+<ul>
+  <li>每一行都是独立的</li>
+  <li>某一行出错不会影响其他行</li>
+</ul>
+
+<h3>2-3. 灵活</h3>
+<ul>
+  <li>无需双引号</li>
+  <li><code>{}</code> 变量标签可直接书写</li>
+  <li>HTML 标签（如 <code>&lt;br&gt;</code>）可直接书写</li>
+</ul>
+
+<h3>2-4. 抗错误能力强</h3>
+<ul>
+  <li>错误仅影响所在行</li>
+  <li>不会出现类似 JSON 的“全文件损坏”情况</li>
+</ul>
+
+<h3>2-5. 易于书写</h3>
+<ul>
+  <li>字符量少</li>
+  <li>书写速度快</li>
+  <li>更不易出错</li>
+</ul>
+
+<h2>3. 文件结构</h2>
+<p>LFfile 由两部分组成：<strong>头部（Head）</strong> 与 <strong>主体（Body）</strong>。</p>
+
+<h3>3-1. 头部（Head）</h3>
+<p>头部用于指定目标语言。</p>
+<pre><code>(lang=Ja)</code></pre>
+<p><strong>规则：</strong></p>
+<ul>
+  <li>必须遵循 ISO 639-1</li>
+  <li>格式为：首字母大写 + 第二个字母小写（如 <code>Ja</code>、<code>En</code>、<code>Fr</code>、<code>De</code>、<code>Ko</code>、<code>Zh</code>）</li>
+</ul>
+
+<h3>3-2. 主体（Body）</h3>
+<p>格式如下：</p>
+<pre><code>&lt;ID&gt; = &lt;翻译文本&gt;</code></pre>
+<p>最小示例：</p>
+<pre><code>A1 = Hello.</code></pre>
+
+<h3>3-3. 换行规则</h3>
+<p>LFfile 以行为单位，每行具有独立意义。</p>
+<ul>
+  <li>头部：1 行</li>
+  <li>每条翻译：1 行</li>
+  <li>注释：1 行</li>
+</ul>
+<p>示例：</p>
+<pre><code>(lang=Ja)
+A1 = こんにちは。
+A2 = Hello.
+/This is comments.</code></pre>
+
+<h2>4. 如何编写 LFfile</h2>
+<p>LFfile 的编写非常简单。</p>
+
+<h3>4-1. 编写头部</h3>
+<pre><code>(lang=En)</code></pre>
+<ul>
+  <li>遵循 ISO 639-1</li>
+  <li>格式为：大写 + 小写</li>
+</ul>
+
+<h3>4-2. 编写主体</h3>
+
+<h4>(1) 获取 ID</h4>
+<p>示例：</p>
+<pre><code>&lt;p id="A1"&gt;</code></pre>
+<p>→ ID 为 <code>A1</code></p>
+
+<h4>(2) 编写或翻译文本</h4>
+<ul>
+  <li><code>{}</code> 与 <code>&lt;br&gt;</code> 可直接书写</li>
+  <li>无需双引号</li>
+</ul>
+
+<h4>(3) 写入条目</h4>
+<pre><code>&lt;ID&gt; = &lt;翻译文本&gt;</code></pre>
+<p>示例：</p>
+<pre><code>A1 = hello.</code></pre>
+
+<h3>4-3. 保存文件</h3>
+<p>有两种保存方式：</p>
+
+<h4>(1) 先保存为 .txt，再改为 .lf</h4>
+<pre><code>translation.txt → translation.lf</code></pre>
+
+<h4>(2) 直接保存为 .lf</h4>
+<pre><code>mytranslation.lf</code></pre>
+
+<h3>4-4. 字符编码（重要）</h3>
+<p>
+  LFfile 推荐使用 <strong>UTF-8</strong> 保存。
+  若未使用 UTF-8，部分字符可能出现乱码。
+  为避免此问题，请始终使用 UTF-8。
+</p>
+
+<h2>5. 错误处理</h2>
+<p>
+  LFfile 中每一行都是独立的。
+  因此，即使某一行（除头部外）出现语法错误，
+  <strong>也只会忽略该行，不影响其他行。</strong>
+</p>
+
+<h3>5-1. 行独立性</h3>
+<ul>
+  <li>某一行损坏不会影响其他行</li>
+  <li>翻译可继续正常进行</li>
+</ul>
+
+<h3>5-2. 错误行的处理方式</h3>
+<ul>
+  <li>仅跳过错误行</li>
+  <li>其余内容正常加载</li>
+</ul>
+
+<h3>5-3. 错误示例（误写 HTML）</h3>
+<pre><code>A1 = Hello.
+&lt;p id="A1"&gt;Welcome&lt;/p&gt;
+A2 = Bye.</code></pre>
+<p>第二行无效；A1 与 A2 正常加载。</p>
+
+<h3>5-4. 易于定位错误</h3>
+<ul>
+  <li>错误行非常容易发现</li>
+  <li>解析器可选择显示警告</li>
+</ul>
+
+<h3>5-5. 与其他格式的比较</h3>
+<table>
+  <thead>
+    <tr><th>格式</th><th>单行错误的影响</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>JSON</td><td>整个文件损坏</td></tr>
+    <tr><td>XML</td><td>整个文件损坏</td></tr>
+    <tr><td>YAML</td><td>缩进错误导致文件损坏</td></tr>
+    <tr><td>PO</td><td>部分损坏，影响范围较大</td></tr>
+    <tr><td><strong>LFfile</strong></td><td><strong>仅忽略该行</strong></td></tr>
+  </tbody>
+</table>
+
+<h3>5-6. 易于修复</h3>
+<ul>
+  <li>只需修复损坏的行</li>
+  <li>无需检查整个文件</li>
+</ul>
+
+<h3>5-7. 编码警告</h3>
+<p>
+  若未使用 UTF-8 保存，可能出现乱码。
+  请始终使用 UTF-8。
+</p>
+
+<h2>6. 意见与联系</h2>
+<p>
+  欢迎提出任何意见、建议或问题报告——无论多么细小。
+  我们相信仍有未知的问题与改进空间，并将逐一解决。
+</p>
+
+<h3>6-1. 联系方式</h3>
+<pre><code>LFfile-dev@outlook.com</code></pre>
+
+<h3>6-2. 回复策略</h3>
+<ul>
+  <li>可能无法立即回复</li>
+  <li>但在确认内容后，我们将一定回复</li>
+</ul>
+
+<h3>6-3. 隐私</h3>
+<p>
+  您的邮箱与内容仅用于回复与改进，不会用于其他目的。
+</p>
+
+<h2>7. 未来扩展</h2>
+<p>
+  LFfile 将持续改进。
+  我们会根据收到的反馈不断完善规范并添加新功能。
+</p>
+
+<h2>8. 商标声明</h2>
+<p>
+  本规范中提及的产品名称、服务名称与司名称均为其各自所有者的商标或注册商标。
+</p>
+<p>
+  <strong>Windows</strong> 与 <strong>Microsoft</strong> 为 Microsoft Corporation 的商标。
+  本文中出现的其他商标均归其权利人所有。
+</p>
+<p>
+  本规范与上述公司无任何关联。
+  所有名称仅用于说明，无意侵犯任何权利。
+</p>
+
+</body>
+</html>
